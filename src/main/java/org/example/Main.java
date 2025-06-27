@@ -2,20 +2,19 @@ package org.example;
 
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.example.model.Employee;
 import org.example.model.ShiftRecord;
 
 import java.io.FileReader;
 import java.sql.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
         try {
             Map<String, List<ShiftRecord>> shiftsByDate = new HashMap<>();
             List<ShiftRecord> records = new ArrayList<>();
+            List<Employee> employees = new ArrayList<>();
             CSVReader reader = new CSVReader(new FileReader("data/tips_report.csv"));
 
             String[] header = reader.readNext();
@@ -31,9 +30,14 @@ public class Main {
                 String tips = line[5].trim();
                 String sales = line[6].trim();
 
+                if (employee.toLowerCase().contains("total") || role.equalsIgnoreCase("N/A")) {
+                    continue;
+                }
+
                 if (!employee.isEmpty()) {
                     currentEmployee = employee;
                 }
+                Employee worker = new Employee();
 
                 if(!date.isEmpty() && currentEmployee != null) {
                     ShiftRecord record = new ShiftRecord();
@@ -46,6 +50,8 @@ public class Main {
                     record.setSales(sales);
 
                     records.add(record);
+
+
 
                     shiftsByDate.computeIfAbsent(record.getDate(), k -> new ArrayList<>()).add(record);
                 }
