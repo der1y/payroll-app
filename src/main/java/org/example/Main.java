@@ -21,6 +21,8 @@ public class Main {
             String currentEmployee = null;
 
             String[] line;
+
+            // Parse through the CSV file and breakdown the information accordingly
             while ((line = reader.readNext()) != null) {
                 String employee = line[0].trim();
                 String role = line[1].trim();
@@ -30,15 +32,19 @@ public class Main {
                 String tips = line[5].trim();
                 String sales = line[6].trim();
 
+                // Ignores any line that doesn't deal with an employees info
                 if (employee.toLowerCase().contains("total") || role.equalsIgnoreCase("N/A")) {
                     continue;
                 }
 
+                // Keeps you on the same employee after a new one has been established for the first time
                 if (!employee.isEmpty()) {
                     currentEmployee = employee;
                 }
+
                 Employee worker = new Employee();
 
+                // Fill out a record for the shift worked
                 if(!date.isEmpty() && currentEmployee != null) {
                     ShiftRecord record = new ShiftRecord();
                     record.setName(currentEmployee);
@@ -51,8 +57,7 @@ public class Main {
 
                     records.add(record);
 
-
-
+                    // Create a new date to hold shifts by date if one doesn't exist
                     shiftsByDate.computeIfAbsent(record.getDate(), k -> new ArrayList<>()).add(record);
                 }
             }
