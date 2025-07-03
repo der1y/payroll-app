@@ -1,10 +1,11 @@
 package org.example.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Employee {
     private String name;
-    private List<ShiftRecord> shifts;
+    private List<ShiftRecord> shifts = new ArrayList<>();
     private double totalTips;
     private double hoursWorked;
     private double wage;
@@ -21,12 +22,12 @@ public class Employee {
         return shifts;
     }
 
-    public void setShifts(List<ShiftRecord> shifts) {
-        this.shifts = shifts;
+    public void setShifts(ShiftRecord shift) {
+        this.shifts.add(shift);
     }
 
     public double getTotalTips() {
-        return totalTips;
+        return calculateTotalTips();
     }
 
     public void setTotalTips(double totalTips) {
@@ -49,6 +50,17 @@ public class Employee {
         this.wage = wage;
     }
 
+    public double calculateTotalTips() {
+        double total = 0;
+        for (ShiftRecord shift : shifts) {
+            try {
+                total += Double.parseDouble(shift.getTips().substring(1));
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid tips format for shift on " + shift.getDate() + ": " + shift.getTips());
+            }
+        }
+        return total;
+    }
     @Override
     public String toString() {
         return "Employee{" +

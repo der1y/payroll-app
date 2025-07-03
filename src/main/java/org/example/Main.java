@@ -14,7 +14,7 @@ public class Main {
         try {
             Map<String, List<ShiftRecord>> shiftsByDate = new HashMap<>();
             List<ShiftRecord> records = new ArrayList<>();
-            List<Employee> employees = new ArrayList<>();
+            Map<String, Employee> employeeMap = new HashMap<>();
             CSVReader reader = new CSVReader(new FileReader("data/tips_report.csv"));
 
             String[] header = reader.readNext();
@@ -40,9 +40,13 @@ public class Main {
                 // Keeps you on the same employee after a new one has been established for the first time
                 if (!employee.isEmpty()) {
                     currentEmployee = employee;
+                    Employee emp = employeeMap.get(employee);
+                    if (emp == null) {
+                        emp = new Employee();
+                        emp.setName(employee);
+                        employeeMap.put(employee, emp);
+                    }
                 }
-
-                Employee worker = new Employee();
 
                 // Fill out a record for the shift worked
                 if(!date.isEmpty() && currentEmployee != null) {
@@ -56,22 +60,34 @@ public class Main {
                     record.setSales(sales);
 
                     records.add(record);
-
+                    employeeMap.get(currentEmployee).setShifts(record);
                     // Create a new date to hold shifts by date if one doesn't exist
                     shiftsByDate.computeIfAbsent(record.getDate(), k -> new ArrayList<>()).add(record);
                 }
+
             }
 
-            for (ShiftRecord r : records) {
-                System.out.println(r.getName() + " worked as " + r.getRole() + " on " + r.getDate());
-            }
-
-            for (String date : shiftsByDate.keySet()) {
-                System.out.println("Date: " + date);
-
-                for (ShiftRecord r : shiftsByDate.get(date)) {
-                    System.out.println("  - " + r.getName() + " (" + r.getRole() + ")");
+//            for (ShiftRecord r : records) {
+//                System.out.println(r.getName() + " worked as " + r.getRole() + " on " + r.getDate());
+//            }
+//
+//            for (String date : shiftsByDate.keySet()) {
+//                System.out.println("Date: " + date);
+//
+//                for (ShiftRecord r : shiftsByDate.get(date)) {
+//                    System.out.println("  - " + r.getName() + " (" + r.getRole() + ")");
+//                }
+//            }
+            for (Employee emp : employeeMap.values()) {
+                System.out.println("Employee: " + emp.getName());
+                System.out.println("Total Tips: $" + emp.getTotalTips());
+                System.out.println("Hours Worked: " + emp.getHoursWorked());
+                System.out.println("Wage: $" + emp.getWage());
+                System.out.println("Shifts:");
+                for (ShiftRecord shift : emp.getShifts()) {
+                    System.out.println("  - " + shift);
                 }
+                System.out.println();
             }
         } catch (Exception e) {
             e.printStackTrace();
