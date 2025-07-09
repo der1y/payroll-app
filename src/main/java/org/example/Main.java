@@ -8,6 +8,9 @@ import org.example.model.ShiftRecord;
 import java.io.FileReader;
 import java.sql.Array;
 import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.Duration;
 
 public class Main {
     public static void main(String[] args) {
@@ -29,8 +32,20 @@ public class Main {
                 String date = line[2].trim();
                 String timeIn = line[3].trim();
                 String timeOut = line[4].trim();
-                String tips = line[5].trim();
-                String sales = line[6].trim();
+                if (line[5].trim().isEmpty()) {
+                    line[5] = "0"; // Default to 0 if tips are not provided
+                } else {
+                    line[5] = line[5].replace("$", ""); // Remove dollar sign if present
+                    line[5] = line[5].replace(",", "");
+                }
+                double tips = Double.parseDouble(line[5].trim());
+                if (line[6].trim().isEmpty()) {
+                    line[6] = "0"; // Default to 0 if sales are not provided
+                } else {
+                    line[6] = line[6].replace("$", ""); // Remove dollar sign if present
+                    line[6] = line[6].replace(",", "");
+                }
+                double sales = Double.parseDouble(line[6].trim());
 
                 // Ignores any line that doesn't deal with an employees info
                 if (employee.toLowerCase().contains("total") || role.equalsIgnoreCase("N/A")) {

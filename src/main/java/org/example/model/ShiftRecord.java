@@ -6,8 +6,8 @@ public class ShiftRecord {
     private String date;
     private String timeIn;
     private String timeOut;
-    private String tips;
-    private String sales;
+    private double tips;
+    private double sales;
 
     public String getName() {
         return name;
@@ -49,19 +49,19 @@ public class ShiftRecord {
         this.timeOut = timeOut;
     }
 
-    public String getTips() {
+    public double getTips() {
         return tips;
     }
 
-    public void setTips(String tips) {
+    public void setTips(double tips) {
         this.tips = tips;
     }
 
-    public String getSales() {
+    public double getSales() {
         return sales;
     }
 
-    public void setSales(String sales) {
+    public void setSales(double sales) {
         this.sales = sales;
     }
 

@@ -54,12 +54,12 @@ public class Employee {
         double total = 0;
         for (ShiftRecord shift : shifts) {
             try {
-                total += Double.parseDouble(shift.getTips().substring(1));
+                total += shift.getTips();
             } catch (NumberFormatException e) {
                 System.err.println("Invalid tips format for shift on " + shift.getDate() + ": " + shift.getTips());
             }
         }
-        return total;
+        return Math.round(total * 100.0) / 100.0;
     }
     @Override
     public String toString() {
