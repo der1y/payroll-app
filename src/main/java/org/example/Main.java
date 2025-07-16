@@ -1,16 +1,12 @@
 package org.example;
 
 import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvToBeanBuilder;
 import org.example.model.Employee;
 import org.example.model.ShiftRecord;
 
 import java.io.FileReader;
-import java.sql.Array;
 import java.util.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.Duration;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -70,7 +66,7 @@ public class Main {
                     record.setRole(role);
                     record.setDate(date);
                     record.setTimeIn(timeIn);
-                    record.setTimeOut(timeOut);
+                    record.setTimeOutStr(timeOut);
                     record.setTips(tips);
                     record.setSales(sales);
 

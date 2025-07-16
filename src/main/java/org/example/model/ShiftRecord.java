@@ -1,13 +1,31 @@
 package org.example.model;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.time.Duration;
 
 public class ShiftRecord {
     private String name;
     private String role;
     private String date;
-    private String timeIn;
-    private String timeOut;
+    private LocalDateTime timeIn;
+    private LocalDateTime timeOut;
     private double tips;
     private double sales;
+
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    public ShiftRecord(String name, String role, String date, LocalDateTime timeIn, LocalDateTime timeOut, double tips, double sales) {
+        this.name = name;
+        this.role = role;
+        this.date = date;
+        this.timeIn = timeIn;
+        this.timeOut = timeOut;
+        this.tips = tips;
+        this.sales = sales;
+    }
+
+    public ShiftRecord() {
+    }
 
     public String getName() {
         return name;
@@ -33,20 +51,20 @@ public class ShiftRecord {
         this.date = date;
     }
 
-    public String getTimeIn() {
+    public LocalDateTime getTimeIn() {
         return timeIn;
     }
 
-    public void setTimeIn(String timeIn) {
-        this.timeIn = timeIn;
+    public void setTimeIn(String timeInStr) {
+        this.timeIn = LocalDateTime.parse(timeInStr, TIME_FORMATTER);
     }
 
-    public String getTimeOut() {
+    public LocalDateTime getTimeOutStr() {
         return timeOut;
     }
 
-    public void setTimeOut(String timeOut) {
-        this.timeOut = timeOut;
+    public void setTimeOutStr(String timeOutStr) {
+        this.timeOut = LocalDateTime.parse(timeOutStr, TIME_FORMATTER);
     }
 
     public double getTips() {
