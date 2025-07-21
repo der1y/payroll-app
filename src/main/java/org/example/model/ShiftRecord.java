@@ -105,14 +105,12 @@ public class ShiftRecord {
         switch (role) {
             case "Server":
                 return 2.13 * getHoursWorked();
-                break;
             case "Bartender":
                 return 6.00 * getHoursWorked();
-                break;
             case "Host":
                 return 10.00 * getHoursWorked();
-                break;
             default:
+                return 0.0; // Default wage for unknown roles
         }
     }
 
