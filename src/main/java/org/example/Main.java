@@ -66,7 +66,7 @@ public class Main {
                     record.setRole(role);
                     record.setDate(date);
                     record.setTimeIn(timeIn);
-                    record.setTimeOutStr(timeOut);
+                    record.setTimeOut(timeOut);
                     record.setTips(tips);
                     record.setSales(sales);
 

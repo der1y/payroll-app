@@ -9,6 +9,8 @@ public class ShiftRecord {
     private String date;
     private LocalDateTime timeIn;
     private LocalDateTime timeOut;
+    private double hoursWorked;
+    private double wage;
     private double tips;
     private double sales;
 
@@ -63,8 +65,24 @@ public class ShiftRecord {
         return timeOut;
     }
 
-    public void setTimeOutStr(String timeOutStr) {
+    public void setTimeOut(String timeOutStr) {
         this.timeOut = LocalDateTime.parse(timeOutStr, TIME_FORMATTER);
+    }
+
+    public double getHoursWorked() {
+        if (timeIn != null && timeOut != null) {
+            Duration duration = Duration.between(timeIn, timeOut);
+            this.hoursWorked = duration.toMinutes() / 60.0; // Convert minutes to hours
+        }
+        return hoursWorked;
+    }
+
+    public double getWage() {
+        return wage;
+    }
+
+    public void setWage(double wage) {
+        this.wage = wage;
     }
 
     public double getTips() {
@@ -83,14 +101,29 @@ public class ShiftRecord {
         this.sales = sales;
     }
 
+    public double calculateWage() {
+        switch (role) {
+            case "Server":
+                return 2.13 * getHoursWorked();
+                break;
+            case "Bartender":
+                return 6.00 * getHoursWorked();
+                break;
+            case "Host":
+                return 10.00 * getHoursWorked();
+                break;
+            default:
+        }
+    }
+
     @Override
     public String toString() {
         return "ShiftRecord{" +
                 "name='" + name + '\'' +
                 ", role='" + role + '\'' +
                 ", date='" + date + '\'' +
-                ", timeIn='" + timeIn + '\'' +
-                ", timeOut='" + timeOut + '\'' +
+                ", timeIn='" + timeIn.format(TIME_FORMATTER) + '\'' +
+                ", timeOut='" + timeOut.format(TIME_FORMATTER) + '\'' +
                 ", tips='" + tips + '\'' +
                 ", sales='" + sales + '\'' +
                 '}';

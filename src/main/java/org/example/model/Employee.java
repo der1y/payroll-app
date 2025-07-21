@@ -35,7 +35,7 @@ public class Employee {
     }
 
     public double getHoursWorked() {
-        return hoursWorked;
+        return calculateHoursWorked();
     }
 
     public void setHoursWorked(double hoursWorked) {
@@ -48,6 +48,19 @@ public class Employee {
 
     public void setWage(double wage) {
         this.wage = wage;
+    }
+
+    public double calculateHoursWorked() {
+        double totalHours = 0;
+        for (ShiftRecord shift : shifts) {
+            try {
+                totalHours += shift.getHoursWorked();
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid hours format for shift on " + shift.getDate() + ": " + shift.getHoursWorked());
+            }
+        }
+
+        return Math.round(totalHours * 100.0) / 100.0;
     }
 
     public double calculateTotalTips() {
