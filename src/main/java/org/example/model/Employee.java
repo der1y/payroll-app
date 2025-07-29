@@ -43,11 +43,23 @@ public class Employee {
     }
 
     public double getWage() {
-        return wage;
+        return calculateTotalWage();
     }
 
     public void setWage(double wage) {
         this.wage = wage;
+    }
+
+    public double calculateTotalWage() {
+        double totalWage = 0;
+        for (ShiftRecord shift: shifts) {
+            try {
+                 totalWage += shift.getWage();
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid wage on " + shift.getDate());
+            }
+        }
+        return totalWage;
     }
 
     public double calculateHoursWorked() {

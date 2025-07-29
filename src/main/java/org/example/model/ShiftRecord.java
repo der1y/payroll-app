@@ -78,7 +78,7 @@ public class ShiftRecord {
     }
 
     public double getWage() {
-        return wage;
+        return calculateWage();
     }
 
     public void setWage(double wage) {
