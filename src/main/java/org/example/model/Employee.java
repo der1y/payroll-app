@@ -43,7 +43,7 @@ public class Employee {
     }
 
     public double getWage() {
-        return calculateTotalWage();
+        return Math.round(calculateTotalWage() * 100.0) / 100.0;
     }
 
     public void setWage(double wage) {

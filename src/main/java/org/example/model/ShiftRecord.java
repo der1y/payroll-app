@@ -13,6 +13,7 @@ public class ShiftRecord {
     private double wage;
     private double tips;
     private double sales;
+    private double tipOut;
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -99,6 +100,14 @@ public class ShiftRecord {
 
     public void setSales(double sales) {
         this.sales = sales;
+    }
+
+    public double getTipOut() {
+        return tipOut;
+    }
+
+    public void setTipOut(double tipOut) {
+        this.tipOut = tipOut;
     }
 
     public double calculateWage() {
