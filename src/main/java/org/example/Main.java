@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import org.example.model.Employee;
 import org.example.model.ShiftRecord;
+import org.example.model.WageCalculator;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -91,6 +92,8 @@ public class Main {
                 record.setTimeOut(timeOut);
                 record.setTips(tips);
                 record.setSales(sales);
+                double wage = WageCalculator.calculateWage(record.getRole(), record.getHoursWorked());
+                record.setWage(wage);
 
                 records.add(record);
                 employeeMap.get(currentEmployee).setShifts(record);

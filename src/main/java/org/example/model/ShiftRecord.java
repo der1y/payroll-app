@@ -68,18 +68,15 @@ public class ShiftRecord {
 
     public void setTimeOut(String timeOutStr) {
         this.timeOut = LocalDateTime.parse(timeOutStr, TIME_FORMATTER);
+        calculateHoursWorked(); // Calculate hours worked when timeOut is set
     }
 
     public double getHoursWorked() {
-        if (timeIn != null && timeOut != null) {
-            Duration duration = Duration.between(timeIn, timeOut);
-            this.hoursWorked = duration.toMinutes() / 60.0; // Convert minutes to hours
-        }
         return hoursWorked;
     }
 
     public double getWage() {
-        return calculateWage();
+        return wage;
     }
 
     public void setWage(double wage) {
@@ -110,16 +107,10 @@ public class ShiftRecord {
         this.tipOut = tipOut;
     }
 
-    public double calculateWage() {
-        switch (role) {
-            case "Server":
-                return 2.13 * getHoursWorked();
-            case "Bartender":
-                return 6.00 * getHoursWorked();
-            case "Host":
-                return 10.00 * getHoursWorked();
-            default:
-                return 0.0; // Default wage for unknown roles
+    private void calculateHoursWorked() {
+        if (timeIn != null && timeOut != null) {
+            Duration duration = Duration.between(timeIn, timeOut);
+            this.hoursWorked = duration.toMinutes() / 60.0; // Convert minutes to hours
         }
     }
 

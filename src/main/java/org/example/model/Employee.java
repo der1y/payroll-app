@@ -43,7 +43,7 @@ public class Employee {
     }
 
     public double getWage() {
-        return Math.round(calculateTotalWage() * 100.0) / 100.0;
+        return calculateTotalWage();
     }
 
     public void setWage(double wage) {
@@ -59,7 +59,7 @@ public class Employee {
                 System.err.println("Invalid wage on " + shift.getDate());
             }
         }
-        return totalWage;
+        return Math.round(totalWage * 100.00) / 100.0;
     }
 
     public double calculateHoursWorked() {
