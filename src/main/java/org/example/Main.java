@@ -3,6 +3,7 @@ package org.example;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import org.example.model.Employee;
+import org.example.model.PayrollCalculator;
 import org.example.model.ShiftRecord;
 import org.example.model.WageCalculator;
 
@@ -110,7 +111,7 @@ public class Main {
             System.out.println("Employee: " + emp.getName());
             System.out.println("Total Tips: $" + emp.getTotalTips());
             System.out.println("Hours Worked: " + emp.getHoursWorked());
-            System.out.println("Wage: $" + emp.getWage());
+            System.out.println("Wage: $" + PayrollCalculator.calculateTotalWage(emp));
             System.out.println("Shifts:");
             for (ShiftRecord shift : emp.getShifts()) {
                 System.out.println("  - " + shift);
