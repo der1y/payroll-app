@@ -62,7 +62,7 @@ public class ShiftRecord {
         this.timeIn = LocalDateTime.parse(timeInStr, TIME_FORMATTER);
     }
 
-    public LocalDateTime getTimeOutStr() {
+    public LocalDateTime getTimeOut() {
         return timeOut;
     }
 
@@ -97,6 +97,7 @@ public class ShiftRecord {
 
     public void setSales(double sales) {
         this.sales = sales;
+        
     }
 
     public double getTipOut() {

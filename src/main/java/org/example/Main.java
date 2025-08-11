@@ -103,8 +103,26 @@ public class Main {
             }
 
         }
+
+        for (Map.Entry<String, List<ShiftRecord>> record : shiftsByDate.entrySet()) {
+            int hostCount = 0;
+            for (ShiftRecord shift : record.getValue()) {
+                if (shift.getRole().equalsIgnoreCase("Host")) {
+                    hostCount++;
+                }
+            }
+            for (ShiftRecord shift : record.getValue()) {
+                switch (hostCount) {
+                    case 0: shift.setTipOut(0);
+                    case 1: shift.setTipOut(shift.getSales() * 0.03);
+                    case 2: shift.setTipOut(shift.getSales() * 0.04);
+                }
+            }
+        }
         return employeeMap;
     }
+
+
 
     private static void printEmployeeRecords(Map<String, Employee> employeeMap) {
         for (Employee emp : employeeMap.values()) {
