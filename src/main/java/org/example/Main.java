@@ -13,7 +13,7 @@ import java.util.*;
 
 
 public class Main {
-    public static void main(String[] args) {
+    static void main(String[] args) {
         try {
             Map<String, Employee> employeeMap = getStringEmployeeMap();
 
@@ -32,7 +32,6 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ;
     }
 
     private static Map<String, Employee> getStringEmployeeMap() throws IOException, CsvValidationException {
@@ -100,7 +99,7 @@ public class Main {
                 records.add(record);
                 employeeMap.get(currentEmployee).setShifts(record);
                 // Create a new date to hold shifts by date if one doesn't exist
-                shiftsByDate.computeIfAbsent(record.getDate(), k -> new ArrayList<>()).add(record);
+                shiftsByDate.computeIfAbsent(record.getDate(), _ -> new ArrayList<>()).add(record);
             }
 
         }
