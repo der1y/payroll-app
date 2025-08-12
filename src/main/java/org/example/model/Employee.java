@@ -80,7 +80,7 @@ public class Employee {
     public double calculateTotalTips() {
         return Math.round(shifts.stream()
                 .mapToDouble(ShiftRecord::getTips)
-                .sum() * 100.0) / 100.0;
+                .sum() * 100.00) / 100.00;
 
 //        double total = 0;
 //        for (ShiftRecord shift : shifts) {

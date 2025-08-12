@@ -31,7 +31,8 @@ public class Main {
             printEmployeeRecords(employeeMap);
         } catch (Exception e) {
             e.printStackTrace();
-        };
+        }
+        ;
     }
 
     private static Map<String, Employee> getStringEmployeeMap() throws IOException, CsvValidationException {
@@ -84,7 +85,7 @@ public class Main {
             }
 
             // Fill out a record for the shift worked
-            if(!date.isEmpty() && currentEmployee != null) {
+            if (!date.isEmpty() && currentEmployee != null) {
                 ShiftRecord record = new ShiftRecord();
                 record.setName(currentEmployee);
                 record.setRole(role);
@@ -103,25 +104,36 @@ public class Main {
             }
 
         }
-
+        // Loop through all the shifts to determine tipOut
         for (Map.Entry<String, List<ShiftRecord>> record : shiftsByDate.entrySet()) {
             int hostCount = 0;
+            // Count how many host worked that day
             for (ShiftRecord shift : record.getValue()) {
                 if (shift.getRole().equalsIgnoreCase("Host")) {
                     hostCount++;
                 }
             }
             for (ShiftRecord shift : record.getValue()) {
-                switch (hostCount) {
-                    case 0: shift.setTipOut(shift.getSales() * 0.02);
-                    case 1: shift.setTipOut(shift.getSales() * 0.03);
-                    case 2: shift.setTipOut(shift.getSales() * 0.04);
+                if (shift.getRole().equalsIgnoreCase("Manager") && shift.getRole().equalsIgnoreCase("Host")) {
+                    continue;
                 }
+                else if (shift.getRole().equalsIgnoreCase("Bartender")) {
+                    shift.setTipOut(shift.getSales() * 0.01);
+                } else {
+                    switch (hostCount) {
+                        case 0:
+                            shift.setTipOut(shift.getSales() * 0.02);
+                        case 1:
+                            shift.setTipOut(shift.getSales() * 0.03);
+                        case 2:
+                            shift.setTipOut(shift.getSales() * 0.04);
+                    }
+                }
+
             }
         }
         return employeeMap;
     }
-
 
 
     private static void printEmployeeRecords(Map<String, Employee> employeeMap) {
