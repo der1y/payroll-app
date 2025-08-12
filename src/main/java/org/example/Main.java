@@ -113,7 +113,7 @@ public class Main {
             }
             for (ShiftRecord shift : record.getValue()) {
                 switch (hostCount) {
-                    case 0: shift.setTipOut(0);
+                    case 0: shift.setTipOut(shift.getSales() * 0.02);
                     case 1: shift.setTipOut(shift.getSales() * 0.03);
                     case 2: shift.setTipOut(shift.getSales() * 0.04);
                 }
