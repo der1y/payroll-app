@@ -113,12 +113,7 @@ public class Main {
                 }
             }
             for (ShiftRecord shift : record.getValue()) {
-                if (shift.getRole().equalsIgnoreCase("Manager") && shift.getRole().equalsIgnoreCase("Host")) {
-                    continue;
-                }
-                else if (shift.getRole().equalsIgnoreCase("Bartender")) {
-                    shift.setTipOut(shift.getSales() * 0.01);
-                } else {
+                if (shift.getRole().equalsIgnoreCase("Server")) {
                     switch (hostCount) {
                         case 0:
                             shift.setTipOut(shift.getSales() * 0.02);
@@ -127,6 +122,8 @@ public class Main {
                         case 2:
                             shift.setTipOut(shift.getSales() * 0.04);
                     }
+                } else if (shift.getRole().equalsIgnoreCase("Bartender")) {
+                    shift.setTipOut(shift.getSales() * 0.01);
                 }
 
             }

@@ -84,7 +84,7 @@ public class ShiftRecord {
     }
 
     public double getTips() {
-        return tips - tipOut;
+        return tips ;
     }
 
     public void setTips(double tips) {
