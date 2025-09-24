@@ -15,7 +15,7 @@ import java.util.*;
 public class Main {
     static void main(String[] args) {
         try {
-            Map<String, Employee> employeeMap = getStringEmployeeMap();
+            Map<String, Employee> employeeMap = getEmployeeMap();
 
 //            for (ShiftRecord r : records) {
 //                System.out.println(r.getName() + " worked as " + r.getRole() + " on " + r.getDate());
@@ -34,7 +34,7 @@ public class Main {
         }
     }
 
-    private static Map<String, Employee> getStringEmployeeMap() throws IOException, CsvValidationException {
+    private static Map<String, Employee> getEmployeeMap() throws IOException, CsvValidationException {
         Map<String, List<ShiftRecord>> shiftsByDate = new HashMap<>();
         List<ShiftRecord> records = new ArrayList<>();
         Map<String, Employee> employeeMap = new HashMap<>();
