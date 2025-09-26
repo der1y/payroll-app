@@ -108,6 +108,12 @@ public class ShiftRecord {
         this.tipOut = tipOut;
     }
 
+    // New helper: atomically set tipOut and subtract it from this shift's tips (rounded to cents)
+    public void applyTipOut(double amount) {
+        this.tipOut = Math.round(amount * 100.0) / 100.0;
+        this.tips = Math.round((this.tips - amount) * 100.0) / 100.0;
+    }
+
     private void calculateHoursWorked() {
         if (timeIn != null && timeOut != null) {
             Duration duration = Duration.between(timeIn, timeOut);
@@ -125,6 +131,7 @@ public class ShiftRecord {
                 ", timeOut='" + timeOut.format(TIME_FORMATTER) + '\'' +
                 ", tips='" + tips + '\'' +
                 ", sales='" + sales + '\'' +
+                ", tipOut='" + tipOut + '\'' +
                 '}';
     }
 }

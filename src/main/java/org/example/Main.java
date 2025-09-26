@@ -15,26 +15,22 @@ import java.util.*;
 public class Main {
     static void main(String[] args) {
         try {
-            Map<String, Employee> employeeMap = getEmployeeMap();
+            if (args.length > 0 && "serve".equalsIgnoreCase(args[0])) {
+                // start API server on port 8080
+                ApiServer api = new ApiServer(8080);
+                api.start();
+                System.out.println("Started server mode; use POST /compute to send shift records JSON");
+                return;
+            }
 
-//            for (ShiftRecord r : records) {
-//                System.out.println(r.getName() + " worked as " + r.getRole() + " on " + r.getDate());
-//            }
-//
-//            for (String date : shiftsByDate.keySet()) {
-//                System.out.println("Date: " + date);
-//
-//                for (ShiftRecord r : shiftsByDate.get(date)) {
-//                    System.out.println("  - " + r.getName() + " (" + r.getRole() + ")");
-//                }
-//            }
+            Map<String, Employee> employeeMap = getEmployeeMap();
             printEmployeeRecords(employeeMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static Map<String, Employee> getEmployeeMap() throws IOException, CsvValidationException {
+    public static Map<String, Employee> getEmployeeMap() throws IOException, CsvValidationException {
         Map<String, List<ShiftRecord>> shiftsByDate = new HashMap<>();
         List<ShiftRecord> records = new ArrayList<>();
         Map<String, Employee> employeeMap = new HashMap<>();
@@ -103,32 +99,76 @@ public class Main {
             }
 
         }
-        // Loop through all the shifts to determine tipOut
-        for (Map.Entry<String, List<ShiftRecord>> record : shiftsByDate.entrySet()) {
-            int hostCount = 0;
-            // Count how many host worked that day
-            for (ShiftRecord shift : record.getValue()) {
-                if (shift.getRole().equalsIgnoreCase("Host")) {
-                    hostCount++;
-                }
-            }
-            for (ShiftRecord shift : record.getValue()) {
-                if (shift.getRole().equalsIgnoreCase("Server")) {
-                    switch (hostCount) {
-                        case 0:
-                            shift.setTipOut(shift.getSales() * 0.02);
-                        case 1:
-                            shift.setTipOut(shift.getSales() * 0.03);
-                        case 2:
-                            shift.setTipOut(shift.getSales() * 0.04);
-                    }
-                } else if (shift.getRole().equalsIgnoreCase("Bartender")) {
-                    shift.setTipOut(shift.getSales() * 0.01);
-                }
 
-            }
-        }
+        // Apply tip-out rules to the collected shifts
+        applyTipOuts(shiftsByDate);
+
         return employeeMap;
+    }
+
+    // Public helper so tests can run tip-out logic using synthetic shift data
+    public static void applyTipOuts(Map<String, List<ShiftRecord>> shiftsByDate) {
+        // Loop through all the shifts to determine tipOut and distribute cleanly
+        for (Map.Entry<String, List<ShiftRecord>> entry : shiftsByDate.entrySet()) {
+            List<ShiftRecord> dayShifts = entry.getValue();
+
+            int hostCount = 0;
+            int bartenderCount = 0;
+            for (ShiftRecord shift : dayShifts) {
+                if (shift.getRole().equalsIgnoreCase("Host")) hostCount++;
+                if (shift.getRole().equalsIgnoreCase("Bartender")) bartenderCount++;
+            }
+
+            double totalHostTipOutGiven = 0.0;   // tips that should go to hosts
+            double totalTipToBartenders = 0.0;   // tips that should go to bartenders (from servers)
+
+            // First: compute tipOuts and apply them to payers immediately
+            for (ShiftRecord shift : dayShifts) {
+                String role = shift.getRole();
+                if (role.equalsIgnoreCase("Server")) {
+                    double bartenderTip = shift.getSales() * 0.02; // server -> bartender pool
+                    double hostTip = 0.0; // server -> host pool depends on host count
+                    if (hostCount == 1) {
+                        hostTip = shift.getSales() * 0.01;
+                    } else if (hostCount >= 2) {
+                        hostTip = shift.getSales() * 0.02;
+                    }
+                    double totalTipOut = bartenderTip + hostTip;
+                    shift.applyTipOut(totalTipOut); // subtract from server's tips and record tipOut
+
+                    totalHostTipOutGiven += hostTip;
+                    totalTipToBartenders += bartenderTip;
+                } else if (role.equalsIgnoreCase("Bartender")) {
+                    // Bartenders tip out a percentage to hosts
+                    double hostTip = shift.getSales() * 0.01; // bartender -> hosts
+                    shift.applyTipOut(hostTip);
+                    totalHostTipOutGiven += hostTip;
+                } else {
+                    // hosts/managers/non-payers: no immediate tip-out change
+                }
+            }
+
+            // Second: distribute host pool equally among hosts who worked that day
+            if (hostCount > 0 && totalHostTipOutGiven > 0.0) {
+                double perHostShare = Math.round((totalHostTipOutGiven / hostCount) * 100.0) / 100.0;
+                for (ShiftRecord shift : dayShifts) {
+                    if (shift.getRole().equalsIgnoreCase("Host")) {
+                        shift.setTips(Math.round((shift.getTips() + perHostShare) * 100.0) / 100.0);
+                    }
+                }
+            }
+
+            // Third: distribute server->bartender pool equally among bartenders who worked that day
+            if (bartenderCount > 0 && totalTipToBartenders > 0.0) {
+                double perBartenderShare = Math.round((totalTipToBartenders / bartenderCount) * 100.0) / 100.0;
+                for (ShiftRecord shift : dayShifts) {
+                    if (shift.getRole().equalsIgnoreCase("Bartender")) {
+                        shift.setTips(Math.round((shift.getTips() + perBartenderShare) * 100.0) / 100.0);
+                    }
+                }
+            }
+
+        }
     }
 
 
