@@ -15,14 +15,6 @@ import java.util.*;
 public class Main {
     static void main(String[] args) {
         try {
-            if (args.length > 0 && "serve".equalsIgnoreCase(args[0])) {
-                // start API server on port 8080
-                ApiServer api = new ApiServer(8080);
-                api.start();
-                System.out.println("Started server mode; use POST /compute to send shift records JSON");
-                return;
-            }
-
             Map<String, Employee> employeeMap = getEmployeeMap();
             printEmployeeRecords(employeeMap);
         } catch (Exception e) {
